@@ -1,24 +1,27 @@
+BOARD_SIZE = 19
+WIN_LENGTH = 5
+
 def check_win(board, player, last_move):
     row, col = last_move
     directions = [(0, 1), (1, 0), (1, 1), (1, -1)]  # right, down, down-right, down-left
     
-    for dr, dc in directions:
+    for deltaRow, deltaCol in directions:
         count = 1
-        for i in range(1, 5):
-            r, c = row + dr * i, col + dc * i
-            if 0 <= r < 19 and 0 <= c < 19 and board[r][c] == player:
+        for i in range(1, WIN_LENGTH):
+            r, c = row + deltaRow * i, col + deltaCol * i
+            if 0 <= r < BOARD_SIZE and 0 <= c < BOARD_SIZE and board[r][c] == player:
                 count += 1
             else:
                 break
         
-        for i in range(1, 5):
-            r, c = row - dr * i, col - dc * i
-            if 0 <= r < 19 and 0 <= c < 19 and board[r][c] == player:
+        for i in range(1, WIN_LENGTH):
+            r, c = row - deltaRow * i, col - deltaCol * i
+            if 0 <= r < BOARD_SIZE and 0 <= c < BOARD_SIZE and board[r][c] == player:
                 count += 1
             else:
                 break
         
-        if count == 5:
+        if count == WIN_LENGTH:
             return (row+1, col+1)
     
     return None
@@ -26,18 +29,18 @@ def check_win(board, player, last_move):
 def print_rules():
     print("Ласкаво просимо до гри The GAME!")
     print("Правила:")
-    print("1. Гра відбувається на дошці розміром 19x19.")
+    print(f"1. Гра відбувається на дошці розміром {BOARD_SIZE}x{BOARD_SIZE}.")
     print("2. Два гравці по черзі ставлять чорні (1) та білі (2) камені.")
     print("3. Чорні завжди ходять першими.")
-    print("4. Мета - поставити п'ять каменів одного кольору підряд по горизонталі, вертикалі або діагоналі.")
+    print(f"4. Мета - поставити {WIN_LENGTH} каменів одного кольору підряд по горизонталі, вертикалі або діагоналі.")
     print("5. Гра закінчується, коли один з гравців виграє або дошка повністю заповнена (нічия).")
 
 def validate_board(board):
-    if len(board) != 19:
+    if len(board) != BOARD_SIZE:
         return False
     
     for row in board:
-        if len(row) != 19:
+        if len(row) != BOARD_SIZE:
             return False
         for cell in row:
             if cell not in [0, 1, 2]:
@@ -56,11 +59,11 @@ def main():
             print("Будь ласка, введіть ціле число.")
     
     for _ in range(num_cases):
-        print("Введіть конфігурацію дошки (19 рядків по 19 чисел в кожному, 0 - пусто, 1 - чорний, 2 - білий):")
+        print(f"Введіть конфігурацію дошки ({BOARD_SIZE} рядків по {BOARD_SIZE} чисел в кожному, 0 - пусто, 1 - чорний, 2 - білий):")
         
         while True:
             board = []
-            for _ in range(19):
+            for _ in range(BOARD_SIZE):
                 try:
                     row = list(map(int, input().split()))
                     board.append(row)
@@ -73,8 +76,8 @@ def main():
                 else:
                     print("Неправильні розміри дошки або невірні значення. Спробуйте ще раз.")
         
-        for row in range(19):
-            for col in range(19):
+        for row in range(BOARD_SIZE):
+            for col in range(BOARD_SIZE):
                 if board[row][col] != 0:
                     player = board[row][col]
                     win = check_win(board, player, (row, col))
