@@ -1,6 +1,5 @@
 BOARD_SIZE = 19
 WIN_LENGTH = 5
-
 def check_win(board, player, last_move):
     row, col = last_move
     directions = [(0, 1), (1, 0), (1, 1), (1, -1)]  # right, down, down-right, down-left
@@ -54,16 +53,19 @@ def main():
     while True:
         try:
             num_cases = int(input("Введіть кількість тест-кейсів: "))
+            if num_cases <= 0:
+                print("Кількість тест-кейсів повинна бути додатним цілим числом.")
+                continue
             break
         except ValueError:
             print("Будь ласка, введіть ціле число.")
     
-    for _ in range(num_cases):
+    for case_num in range(num_cases):
         print(f"Введіть конфігурацію дошки ({BOARD_SIZE} рядків по {BOARD_SIZE} чисел в кожному, 0 - пусто, 1 - чорний, 2 - білий):")
         
         while True:
             board = []
-            for _ in range(BOARD_SIZE):
+            for row_num in range(BOARD_SIZE):
                 try:
                     row = list(map(int, input().split()))
                     board.append(row)
@@ -76,21 +78,25 @@ def main():
                 else:
                     print("Неправильні розміри дошки або невірні значення. Спробуйте ще раз.")
         
+        tie = True
         for row in range(BOARD_SIZE):
             for col in range(BOARD_SIZE):
                 if board[row][col] != 0:
                     player = board[row][col]
                     win = check_win(board, player, (row, col))
                     
+                    # The 'win' variable represents the winning position (row, col) if a player has won
                     if win:
                         print(f"Гравець {player} переміг!")
                         print(f"Виграшна позиція: ({win[0]}, {win[1]})")
+                        tie = False
                         break
             else:
                 continue
             break
-        else:
-            print("Нічия!")
+        
+        if tie:
+            print("Нічия!")  # Add this line to indicate a tie after all test cases have been processed
         
         print()
 
